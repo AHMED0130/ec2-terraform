@@ -99,17 +99,19 @@ resource "aws_key_pair" "ssh-key" {
 
 
 resource "aws_instance" "server" {
-  ami = data.aws_ami.this.id
-  associate_public_ip_address = true
-  instance_type = var.instance_type
-  
-  vpc_security_group_ids = [ aws_default_security_group.nginx-security-group.id ]
-  subnet_id = aws_subnet.subnet-1.id
-  availability_zone = var.subnet_AZ
-  key_name = aws_key_pair.ssh-key.key_name
- 
+  ami                          = data.aws_ami.this.id
+  associate_public_ip_address  = true
+  instance_type                = var.instance_type
 
+  vpc_security_group_ids       = [aws_default_security_group.nginx-security-group.id]
+  subnet_id                    = aws_subnet.subnet-1.id
+  availability_zone             = var.subnet_AZ
+  key_name                     = aws_key_pair.ssh-key.key_name
+  user_data = file("script.sh")
+
+              
 }
+
 
 
 output "ec2-public-ip" {
