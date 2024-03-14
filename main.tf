@@ -8,7 +8,7 @@ variable "environment_prefix" {}
 variable "subnet_AZ" {}
 variable "instance_type" {}
 variable "public_key" {}
-
+variable "private_key_path" {}
 
 resource "aws_vpc" "my_vpc" {
   cidr_block = var.vpc_ciderblock
@@ -107,7 +107,21 @@ resource "aws_instance" "server" {
   subnet_id                    = aws_subnet.subnet-1.id
   availability_zone             = var.subnet_AZ
   key_name                     = aws_key_pair.ssh-key.key_name
-  user_data = file("script.sh")
+  
+  connection {
+    type = "ssh"
+    host = self.public_ip
+    user = "ec2-user"
+    private_key = file(var.private_key_path)    
+  }
+
+
+  provisioner "remote-exec" {
+   inline = [ "sudo yum update -y",
+              "sudo yum install -y docker",
+              "sudo systemctl start docker"
+              ]
+  }
 
               
 }
