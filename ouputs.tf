@@ -1,5 +1,5 @@
 output "vpc-ip" {
-  value = aws_vpc.my_vpc.id
+  value = module.app-subnet.my_vpc.id
   
 }
 

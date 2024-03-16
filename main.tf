@@ -3,13 +3,7 @@ provider "aws" {
 }
 
 
-resource "aws_vpc" "my_vpc" {
-  cidr_block = var.vpc_ciderblock
-  
-  tags = {
-    Name = "${var.environment_prefix}-vpc"
-  }
-}
+
 
 
 module "app-subnet" {
@@ -17,9 +11,7 @@ module "app-subnet" {
   subnet-ciderblock = var.subnet-ciderblock
   environment_prefix= var.environment_prefix
   subnet_AZ = var.subnet_AZ
-  vpc_id = aws_vpc.my_vpc.id
-  my_vpc_default_route_table_id= aws_vpc.my_vpc.default_route_table_id
-  
+  vpc_ciderblock = var.subnet-ciderblock  
 }
 
 module "web-server" {
@@ -28,16 +20,7 @@ module "web-server" {
   subnet_AZ = var.subnet_AZ
   instance_type = var.instance_type
   public_key = var.public_key
-  vpc_id = aws_vpc.my_vpc.id
+  vpc_id = module.app-subnet.my_vpc.id
   subnet_id = module.app-subnet.subnet.id
 }
  
-
-
-
-
-
-
-
-
-
